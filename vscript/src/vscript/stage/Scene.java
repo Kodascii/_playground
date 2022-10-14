@@ -9,6 +9,16 @@ import vscript.util.VFunc;
  * */
 public abstract class Scene {
 
+    /**
+     * @param duration duration on the scene in millis.
+     **/
+    public Scene(long duration)
+    {
+        this.duration = duration;
+    }
+
+
+
     public enum Backgrounds implements VFunc
     {
         BACKGROUND_1 {
@@ -27,14 +37,21 @@ public abstract class Scene {
         }
     }
 
+
+
     /**
      * Duration of the scene in millis.
      **/
     private long duration;
+
     /**
      * Gets the scene {@link Scene#duration}.
      **/
-    public long getDuration() { return duration; }
+    public long getDuration()
+    {
+        return duration;
+    }
+
     /**
      * Sets the duration of the {@link Scene#duration} in millis, and returns the Scene.
      **/
@@ -45,16 +62,11 @@ public abstract class Scene {
     }
 
 
-    /**
-     * @param duration duration on the scene in millis.
-     **/
-    public Scene(long duration) { this.duration = duration; }
-
 
     /**
-     * A scene is {@code abstract} by default, the method {@code displayOn(T window, long time)} allows to redefined this method, and draw on {@link Window}.
+     * A scene is {@code abstract} by default, the method {@code onDisplay(Window window, long time)} allows to redefined this method, and draw on {@link Window}.
      * @param window the window you want the scene to be displayed on.
-     * @param time refers to {@link Window#clock}.
+     * @param time refers to {@link Window#timeEntry}.
      **/
-    public abstract <T extends Window> void displayOn(T window, long time);
+    public abstract void onDisplay(Window window, long time);
 }

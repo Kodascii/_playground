@@ -1,43 +1,60 @@
 package simplex.math;
 
-import java.util.Arrays;
 
+/**
+ *
+ * @author Kodascii
+ * @version 1.0
+ * @since 1.0
+ **/
 public class XMath {
 
-
-    public static float lerp(float x, float y, float t) { return x + (y - x) * t; }
-
-    public static class Clamp
+    /**
+     * Short form of linear interpolation.
+     * @see simplex.anim.AnimationCurve.Easing
+     **/
+    public static double lerp(double x, double y, double t)
     {
-        public static double xF0bT0d(double x, double b, float d)
-        {
-            return x * (d / b) ;
-        }
-
-        public static double xF0bTcd(double x, double b, double c, double d) { return x * (d - c) / b + c; }
-
-        public static double xFabT0d(double x, double a, double b, double d) { return (x - a) / (b - a) * d; }
-
-        public static double xFabTcd(double x, double a, double b, double c, double d) { return (x - a) / (b - a) * (d - c) + c; }
+        return x + (y - x) * t;
     }
 
+
+    /**
+     * Maps a value {@code x} from the interval {@code [a, b]}, to the interval {@code [c, d]}.
+     **/
+    public static double clamp(double x, double a, double b, double c, double d)
+    {
+        return (x - a) / (b - a) * (d - c) + c;
+    }
+
+
+    /**
+     * <p>Converts a given {@code value} from base 10, to the base specified by {@code radix}.</p>
+     * <strong>Example :</strong>
+     * <pre>{@code
+     *      int val = XMath.convertToBase(5, 2);
+     *      System.out.println(val);
+     * }</pre>
+     * <p><strong>Output :</strong> {@code 101}.</p>
+     **/
     public static int convertToBase(int value, int radix)
     {
-        int Q = value, R = 0;
+        int quotient = value, rest = 0;
         int result = 0;
         int p = 0;
 
-        while(Q != 0)
+        while(quotient != 0)
         {
-            R = Q % radix;
-            result += (int) R * Math.pow(10, p);
+            rest = quotient % radix;
+            result += (int) rest * Math.pow(10, p);
             p++;
 
-            Q = Q/radix;
+            quotient = quotient/radix;
         }
 
         return result;
     }
+
 
     public static int[] _$(int[] alphabet, int level, int seed)
     {

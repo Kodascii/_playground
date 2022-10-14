@@ -1,9 +1,8 @@
 package main;
 
 
-import simplex.anim.AnimationCurve;
-import simplex.anim.Interpolator;
-import vscript.stage.Scene;
+import simplex.math.Vector;
+import simplex.math.XMath;
 import vscript.stage.Window;
 
 
@@ -14,23 +13,12 @@ public class VScriptWindowTest extends Window {
     @Override
     public void onSetup()
     {
-        addTimeline("main");
-        Interpolator interpolator = new Interpolator(300, 600, deltaTime(5000), AnimationCurve.Easing.EASE_OUT_SINE);
-        addToTimeline("main", new Scene(5000) {
-            @Override
-            public <T extends Window> void displayOn(T window, long time) {
-                Backgrounds.BACKGROUND_1.displayOn(window);
-                interpolator.update();
-                drawBullet((float) (200 + interpolator.progress()), 400);
-            }
-        });
-        addToTimeline("main", new Scene(5000) {
-            @Override
-            public <T extends Window> void displayOn(T window, long time) {
-                background(0);
-            }
-        });
+        Vector vector1 = new Vector(1, 2);
+        Vector vector2 = new Vector(1, 5, 7);
+        Vector vector3 = new Vector(-2, 1);
 
+        Vector sum = Vector.add(vector1, vector2, vector3);
+        System.out.println(sum);
     }
 
     @Override
@@ -47,7 +35,8 @@ public class VScriptWindowTest extends Window {
     }
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args)
+    {
         (new VScriptWindowTest()).launch();
     }
 }

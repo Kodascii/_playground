@@ -14,6 +14,13 @@ import java.util.Queue;
  **/
 public class Timeline {
 
+    public Timeline()
+    {
+        scenes = new ArrayDeque<>();
+    }
+
+
+
     /**
      * Stores the time at which the displayed scene occurred;
      **/
@@ -22,17 +29,20 @@ public class Timeline {
     /**
      * Collection of scenes as an {@link ArrayDeque}<{@link Scene}>.
      **/
-    private Queue<Scene> scenes;
+    private final Queue<Scene> scenes;
     /**
      * Gets the scene that is currently displayed on your screen.
      **/
-    public Scene getDisplayedScene() { return scenes.peek(); }
-
-
-    public Timeline()
+    public Scene getDisplayedScene()
     {
-        scenes = new ArrayDeque<>();
+        return scenes.peek();
     }
+
+    /**
+     * Adds an array of {@link Scene} to {@code this.}{@link Timeline}.
+     **/
+    public void addScenes(Scene... scenes) { Arrays.stream(scenes).forEach(this.scenes::offer); }
+
 
 
     /**
@@ -53,8 +63,4 @@ public class Timeline {
         }
     }
 
-    /**
-     * Adds an array of {@link Scene} to {@code this.}{@link Timeline}.
-     **/
-    public void addScenes(Scene... scenes) { Arrays.stream(scenes).forEach(this.scenes::offer); }
 }

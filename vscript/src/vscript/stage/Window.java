@@ -37,6 +37,17 @@ import java.util.HashMap;
 public abstract class Window extends PApplet {
 
     /**
+     * @param quality : Example : {@code super(Quality.HD);} will create a window of HD resolution (1280, 720).
+     **/
+    public Window(Quality quality)
+    {
+        this.quality = quality;
+        timelines = new HashMap<>();
+    }
+
+
+
+    /**
      * List of available qualities.
      **/
     public enum Quality
@@ -115,100 +126,54 @@ public abstract class Window extends PApplet {
     }
 
 
+
     /**
-     * Private variable that stores the time at which the window has been displayed :: instantiation in {@link Window#setup()}
+     * Stores the time at which the window has been displayed :: instantiation in {@link Window#setup()}.
      * */
     private long timeEntry;
 
+
+    /**
+     * Stores the time at which {@link Window#draw()} has been re-invoked.
+     **/
     private long clock;
+
 
     /**
      * Window quality.
      * @see Window.Quality
      **/
     private Quality quality;
+
     /**
      * Returns the current quality.
      **/
-    public Quality getQuality() { return this.quality; }
+    public Quality getQuality()
+    {
+        return this.quality;
+    }
+
     /**
      * Sets the quality.
      * @see Window.Quality
      **/
-    public void setQuality(Quality quality) { this.quality = quality; }
+    public void setQuality(Quality quality)
+    {
+        this.quality = quality;
+    }
+
 
     /**
      * Collection of timelines as a {@code HashMap<String, Timeline>}. You can attribute, for a given timeline, a name.
      **/
     private HashMap<String, Timeline> timelines;
+
     /**
      * @return a {@link Timeline} from {@link Window#timelines} with a given key.
      **/
-    public Timeline getTimeline(String timelineName) { return timelines.get(timelineName); }
-
-
-    /**
-     * @param quality : Example : {@code super(Quality.HD);} will create a window of HD resolution (1280, 720).
-     **/
-    public Window(Quality quality)
+    public Timeline getTimeline(String timelineName)
     {
-        this.quality = quality;
-        timelines = new HashMap<>();
-    }
-
-    /**
-     * Set up your {@link Timeline}'s and your {@link Scene}'s in here.
-     * */
-    public abstract void onSetup();
-
-    /**
-     * Always visible scene.
-     **/
-    public abstract void onDraw();
-
-    /**
-     * Do not {@code @Override} this method !
-     **/
-    public void settings() { setSize(quality.width, quality.height); }
-
-    /**
-     * Do not {@code @Override} this method !
-     **/
-    public void setup()
-    {
-        timeEntry = System.currentTimeMillis();
-        clock = System.currentTimeMillis();
-        onSetup();
-    }
-
-    /**
-     * Do not {@code @Override} this method !
-     **/
-    public void draw()
-    {
-        clock = System.currentTimeMillis();
-        timelines.values().forEach(timeline -> {
-            timeline.onUpdate(timeEntry);
-            Scene displayedScene = timeline.getDisplayedScene();
-            if (displayedScene != null)
-                displayedScene.displayOn(this, timeEntry);
-        });
-        onDraw();
-    }
-
-    /**
-     * <p>Launch the window.</p>
-     * <strong>Example :</strong>
-     * <pre>{@code
-     *      public static void main(String[] args)
-     *      {
-     *          (new Main()).launch();
-     *      }
-     * }</pre>
-     **/
-    public void launch()
-    {
-        PApplet.main(getClass().getName());
+        return timelines.get(timelineName);
     }
 
     /**
@@ -231,14 +196,66 @@ public abstract class Window extends PApplet {
         Timeline timeline = timelines.containsKey(timelineName) ? timelines.get(timelineName) : addTimeline(timelineName);
         timeline.addScenes(scenes);
     }
-    
-    public double deltaTime(String timelineName)
+
+
+
+    /**
+     * Set up your {@link Timeline}'s and your {@link Scene}'s in here.
+     * */
+    public abstract void onSetup();
+
+    /**
+     * Always visible scene.
+     **/
+    public abstract void onDraw();
+
+
+
+    /**
+     * Do not {@code @Override} this method !
+     **/
+    public void settings()
     {
-        return deltaTime(getTimeline(timelineName).getDisplayedScene().getDuration());
+        setSize(quality.width, quality.height);
     }
 
-    public double deltaTime(long time)
+    /**
+     * Do not {@code @Override} this method !
+     **/
+    public void setup()
     {
-        return ((double) System.currentTimeMillis() - clock) / time;
+        timeEntry = System.currentTimeMillis();
+        clock = System.currentTimeMillis();
+        onSetup();
+    }
+
+    /**
+     * Do not {@code @Override} this method !
+     **/
+    public void draw()
+    {
+        clock = System.currentTimeMillis();
+        timelines.values().forEach(timeline -> {
+            timeline.onUpdate(timeEntry);
+            Scene displayedScene = timeline.getDisplayedScene();
+            if (displayedScene != null)
+                displayedScene.onDisplay(this, timeEntry);
+        });
+        onDraw();
+    }
+
+    /**
+     * <p>Launch the window.</p>
+     * <strong>Example :</strong>
+     * <pre>{@code
+     *      public static void main(String[] args)
+     *      {
+     *          (new Main()).launch();
+     *      }
+     * }</pre>
+     **/
+    public void launch()
+    {
+        PApplet.main(getClass().getName());
     }
 }
